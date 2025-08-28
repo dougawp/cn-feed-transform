@@ -5,6 +5,15 @@
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
+    },
+    {
+      "source": "/rss.xml",
+      "headers": [
+        { "key": "Content-Type", "value": "application/rss+xml; charset=utf-8" }
+      ]
     }
+  ],
+  "rewrites": [
+    { "source": "/rss.xml", "destination": "/api/rss" }
   ]
 }
