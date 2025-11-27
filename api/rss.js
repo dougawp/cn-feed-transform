@@ -8,7 +8,7 @@
 
 const DEFAULT_FEED =
   process.env.FEED_URL ||
-  "https://fetchrss.com/feed/aK_GoGujlyOCaLDImjNCpSKk.rss?cb=12345
+  "https://fetchrss.com/feed/1urStc0qB2Mc1urk4o4wc2J2.rss
 ";
 
 const esc = (s = "") =>
