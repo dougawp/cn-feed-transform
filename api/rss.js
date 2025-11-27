@@ -1,36 +1,28 @@
-// app/api/rss/route.ts
-import { NextResponse } from "next/server";
+// api/rss.js
 
 const FEED_URL =
   "https://fetchrss.com/feed/1urStc0qB2Mc1urk4o4wc2J2.rss";
 
-export async function GET(request: Request) {
+module.exports = async (req, res) => {
   try {
-    // Optional: allow ?url=... override, else use your Don Bosco feed
-    const { searchParams } = new URL(request.url);
-    const urlParam = searchParams.get("url");
-    const feedUrl = urlParam || FEED_URL;
+    // Optional: allow ?url=... override, but default to your Don Bosco feed
+    const feedUrl = (req.query && req.query.url) || FEED_URL;
 
     const upstream = await fetch(feedUrl);
 
     if (!upstream.ok) {
       const body = await upstream.text().catch(() => "");
       console.error("Upstream feed error:", upstream.status, body);
-      return new NextResponse("Failed to fetch upstream feed", {
-        status: 502,
-      });
+      res.status(502).send("Failed to fetch upstream feed");
+      return;
     }
 
     const xml = await upstream.text();
 
-    return new NextResponse(xml, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/rss+xml; charset=utf-8",
-      },
-    });
+    res.setHeader("Content-Type", "application/rss+xml; charset=utf-8");
+    res.status(200).send(xml);
   } catch (err) {
     console.error("RSS handler crashed:", err);
-    return new NextResponse("Internal RSS error", { status: 500 });
+    res.status(500).send("Internal RSS error");
   }
-}
+};
